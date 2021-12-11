@@ -1,9 +1,9 @@
-const path = require('path');
+import { path } from 'path';
 
 const mode = process.env.NODE_ENV === 'production' ? 'production' : 'development';
-const base = mode === 'production' ? `/ ${path.basename(process.cwd())} /` : '/';
+const base = mode === 'production' ? `/ ${path(process.cwd())} /` : '/';
 
-module.exports = {
+export default {
   root: 'src',
   base,
   mode,
