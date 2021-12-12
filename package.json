@@ -9,8 +9,6 @@
   },
   "devDependencies": {
     "@babel/preset-env": "^7.16.4",
-    "babel-core": "^6.26.3",
-    "babel-jest": "^27.4.4",
     "eslint": "^8.4.1",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.25.3",
@@ -32,7 +30,7 @@
       ]
     ]
   },
-  "jest" : {
+  "jest": {
     "moduleFileExtensions": [
       "js",
       "json"
