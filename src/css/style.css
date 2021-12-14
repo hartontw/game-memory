@@ -4,8 +4,9 @@
   --cols: 10;
   --rows: 2;
   --size: 10vh;
-  --ml: 20vh;
-  --mt: 10vh;
+  --gap: 1vh;
+  --ml: 1vh;
+  --mt: 1vh;
 }
 
 #app {
@@ -15,6 +16,7 @@
 
 .menu {
   font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-size: 2vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
@@ -22,14 +24,143 @@
   position: absolute;
 }
 
-.menu img {
+.menu .button {
   width: 5vh;
   height: 5vh;
   transition: transform 0.1s;
+  position: absolute;
 }
 
-.menu img:hover {
+.menu .button:hover {
   transform: scale(1.1);
+}
+
+.menu .button.closed {
+  transform: scale(0);
+}
+
+.menu .button.closed:hover {
+  transform: scale(0);
+}
+
+.menu .settings {
+  --time: 0.5s;
+
+  position: absolute;
+
+  visibility: hidden;
+  transform: scale(0);
+  opacity: 0;
+  width: 0;
+  height: 0;
+  margin: -40vh -40vw;
+  transition: transform var(--time), margin var(--time), opacity var(--time);
+}
+
+.menu .settings.open {
+  visibility: visible;
+  opacity: 1;
+  width: 80vw;
+  height: 80vh;
+  transform: scale(1);
+  margin: 4vh 10vw;
+  z-index: 1;
+}
+
+.menu .settings .header {
+  border-radius: 1vh 1vh 0 0;
+  background-color: #5f8f9f;
+  color: #eef;
+  display: flex;
+  height: 4vh;
+}
+
+.menu .settings .header .close-btn {
+  background: #fc5b56;
+  height: 2vh;
+  width: 2vh;
+  border-radius: 1vh;
+  margin: 0.8vh 1vw;
+  border: 0.25vh solid #0af0;
+}
+
+.menu .settings .header .close-btn:hover {
+  border: 0.25vh solid #0aff;
+}
+
+.menu .settings .header p {
+  margin-left: 34vw;
+  margin-top: 1vh;
+  font-weight: bold;
+}
+
+.menu .settings .content {
+  width: 80vw;
+  height: 76vh;
+  background: #3e5e6e;
+  color: #ddd;
+}
+
+.menu .settings .content input {
+  margin-top: 2vh;
+}
+
+.menu .settings .content input[type="number"] {
+  width: 6vh;
+}
+
+.menu .settings .content .cards {
+  --delete-time: 4s;
+
+  width: 75vw;
+  height: 66vh;
+  margin: 2vh 2vw;
+  background: #6f8f9f;
+  border-radius: 1vh;
+  overflow-y: scroll;
+  padding: var(--gap);
+  display: grid;
+  grid-template-columns: repeat(auto-fill, var(--size));
+  grid-template-rows: repeat(auto-fill, var(--size));
+  grid-gap: var(--gap);
+}
+
+.menu .settings .content .cards .file {
+  width: var(--size);
+  height: var(--size);
+  background: url("images/btn-add.svg");
+}
+
+.menu .settings .content .cards .file:hover {
+  transform: scale(1.05);
+}
+
+.menu .settings .content .cards .card {
+  width: var(--size);
+  height: var(--size);
+  opacity: 1;
+  transition: opacity var(--delete-time);
+}
+
+.menu .settings .content .cards .card.deleting {
+  opacity: 0;
+}
+
+.menu .settings .content .cards .card .thumbnail {
+  width: 100%;
+  height: 100%;
+}
+
+.menu .settings .content .cards .card .delete {
+  width: 85%;
+  height: 85%;
+  position: relative;
+  opacity: 0;
+  top: calc(var(--size) * -1);
+}
+
+.menu .settings .content .cards .card .delete:hover {
+  opacity: 1;
 }
 
 .viewport {
@@ -38,16 +169,21 @@
   background: #333;
   margin: auto;
   display: block;
-  overflow: scroll;
+  overflow-y: scroll;
+}
+
+.viewport.pause {
+  overflow-y: hidden;
+  filter: blur(4px);
 }
 
 .game {
+  display: grid;
   margin-left: var(--ml);
   margin-top: var(--mt);
-  display: grid;
   grid-template-columns: repeat(var(--cols), var(--size));
   grid-template-rows: repeat(var(--rows), var(--size));
-  grid-gap: 1vh;
+  grid-gap: var(--gap);
 }
 
 .game .card {
