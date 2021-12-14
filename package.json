@@ -38,5 +38,8 @@
     "transform": {
       "^.+\\.js$": "babel-jest"
     }
+  },
+  "dependencies": {
+    "croppie": "^2.6.5"
   }
 }
