@@ -6,7 +6,7 @@
  * @return {object} calculated rows and columns
  */
 export function getSize(uniqueCards, maxColumns) {
-  if (uniqueCards < 2) throw new Error('Unique cards must be greater than one');
+  if (uniqueCards < 1) throw new Error('Unique cards must be greater than zero');
 
   const cards = uniqueCards * 2;
   let side = Math.ceil(Math.sqrt(cards));

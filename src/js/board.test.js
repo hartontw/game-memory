@@ -2,6 +2,10 @@ import { getSize } from './board';
 
 // Board test
 describe('Board size test', () => {
+  test('1 Cards | 2 Columns', () => {
+    expect(getSize(1, 2)).toStrictEqual({ rows: 1, cols: 2 });
+  });
+
   test('2 Cards | 2 Columns', () => {
     expect(getSize(2, 2)).toStrictEqual({ rows: 2, cols: 2 });
   });
