@@ -7,6 +7,10 @@
   --gap: 1vh;
   --ml: 1vh;
   --mt: 1vh;
+  --flip-time: 1s;
+  --z-new-game: 1;
+  --z-menu: 2;
+  --z-image-editor: 3;
 }
 
 #app {
@@ -22,6 +26,7 @@
   text-align: center;
   color: #5f8f9f;
   position: absolute;
+  z-index: var(--z-menu);
 }
 
 .menu .button {
@@ -43,7 +48,7 @@
   transform: scale(0);
 }
 
-.menu .settings {
+.menu .new-game {
   --time: 0.5s;
 
   position: absolute;
@@ -57,17 +62,17 @@
   transition: transform var(--time), margin var(--time), opacity var(--time);
 }
 
-.menu .settings.open {
+.menu .new-game.open {
   visibility: visible;
   opacity: 1;
   width: 80vw;
   height: 80vh;
   transform: scale(1);
   margin: 4vh 10vw;
-  z-index: 1;
+  z-index: var(--z-new-game);
 }
 
-.menu .settings .header {
+.menu .new-game .header {
   border-radius: 1vh 1vh 0 0;
   background-color: #5f8f9f;
   color: #eef;
@@ -75,42 +80,57 @@
   height: 4vh;
 }
 
-.menu .settings .header .close-btn {
-  background: #fc5b56;
+.menu .new-game .header .button {
   height: 2vh;
   width: 2vh;
   border-radius: 1vh;
-  margin: 0.8vh 1vw;
   border: 0.25vh solid #0af0;
 }
 
-.menu .settings .header .close-btn:hover {
+.menu .new-game .header .button:hover {
   border: 0.25vh solid #0aff;
 }
 
-.menu .settings .header p {
+.menu .new-game .header .button.close-btn {
+  background: #fc5b56;
+  top: 0.8vh;
+  left: 1vw;
+}
+
+.menu .new-game .header p {
   margin-left: 34vw;
   margin-top: 1vh;
   font-weight: bold;
 }
 
-.menu .settings .content {
+.menu .new-game .header .button.accept-btn {
+  background: #5bfc56;
+  top: 0.8vh;
+  right: 1vw;
+}
+
+.menu .new-game .header .accept-btn:hover {
+  border: 0.25vh solid #0aff;
+}
+
+.menu .new-game .content {
   width: 80vw;
   height: 76vh;
   background: #3e5e6e;
   color: #ddd;
 }
 
-.menu .settings .content input {
+.menu .new-game .content input {
   margin-top: 2vh;
 }
 
-.menu .settings .content input[type="number"] {
+.menu .new-game .content input[type="number"] {
   width: 6vh;
 }
 
-.menu .settings .content .cards {
+.menu .new-game .content .cards {
   --delete-time: 4s;
+  --size: 10vh;
 
   width: 75vw;
   height: 66vh;
@@ -118,40 +138,96 @@
   background: #6f8f9f;
   border-radius: 1vh;
   overflow-y: scroll;
-  padding: var(--gap);
   display: grid;
+  box-sizing: border-box;
+  padding: var(--gap);
   grid-template-columns: repeat(auto-fill, var(--size));
   grid-template-rows: repeat(auto-fill, var(--size));
   grid-gap: var(--gap);
 }
 
-.menu .settings .content .cards .file {
+.menu .new-game .content .cards .file {
   width: var(--size);
   height: var(--size);
-  background: url("images/btn-add.svg");
+  background: url("images/icons/btn-add.svg");
 }
 
-.menu .settings .content .cards .file:hover {
+.menu .new-game .content .cards .file:hover {
   transform: scale(1.05);
 }
 
-.menu .settings .content .cards .card {
+.image-editor {
+  width: 45vh;
+  height: 45vh;
+  top: 20%;
+  left: 20%;
+  background: #3e5e6e;
+  border-radius: 1vh;
+  position: fixed;
+  visibility: hidden;
+  z-index: var(--z-image-editor);
+}
+
+.image-editor.open {
+  visibility: visible;
+}
+
+.image-editor.open .controls {
+  background: #5f8f9f;
+  border-radius: 1vh 1vh 0 0;
+  height: 3vh;
+  display: flex;
+  justify-content: space-between;
+}
+
+.image-editor.open .button {
+  height: 1.75vh;
+  width: 1.75vh;
+  border-radius: 1vh;
+  border: 0.25vh solid #0af0;
+  position: relative;
+}
+
+.image-editor.open .button:hover {
+  border: 0.25vh solid #0aff;
+}
+
+.image-editor.open .close-btn {
+  background: #fc5b56;
+  top: 0.3vh;
+  left: 0.5vw;
+}
+
+.image-editor.open .accept-btn {
+  background: #5bfc56;
+  top: 0.3vh;
+  left: -0.5vw;
+}
+
+.image-editor.open .resizer {
+  width: 45vh;
+  height: 30vh;
+  top: 3vh;
+  position: relative;
+}
+
+.menu .new-game .content .cards .card {
   width: var(--size);
   height: var(--size);
   opacity: 1;
   transition: opacity var(--delete-time);
 }
 
-.menu .settings .content .cards .card.deleting {
+.menu .new-game .content .cards .card.deleting {
   opacity: 0;
 }
 
-.menu .settings .content .cards .card .thumbnail {
+.menu .new-game .content .cards .card .thumbnail {
   width: 100%;
   height: 100%;
 }
 
-.menu .settings .content .cards .card .delete {
+.menu .new-game .content .cards .card .delete {
   width: 85%;
   height: 85%;
   position: relative;
@@ -159,7 +235,7 @@
   top: calc(var(--size) * -1);
 }
 
-.menu .settings .content .cards .card .delete:hover {
+.menu .new-game .content .cards .card .delete:hover {
   opacity: 1;
 }
 
@@ -188,4 +264,29 @@
 
 .game .card {
   background: white;
+  position: relative;
+}
+
+.game .card .back {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  transform: rotate3d(1, 1, 0, 0deg);
+  transition: transform var(--flip-time);
+}
+
+.game .card .back.flip {
+  transform: rotate3d(1, 1, 0, 90deg);
+}
+
+.game .card .front {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  transform: rotate3d(1, 1, 0, 90deg);
+  transition: transform var(--flip-time);
+}
+
+.game .card .front.flip {
+  transform: rotate3d(1, 1, 0, 0deg);
 }
