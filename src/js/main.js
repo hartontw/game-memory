@@ -9,7 +9,7 @@ const game = document.querySelector('.game');
 const over = document.querySelector('.game-over');
 
 const borderMargin = 0.25;
-const flipTime = 1000;
+const flipTime = 500;
 
 let cards = 16;
 let cardSize = 10;
@@ -18,6 +18,7 @@ let pairs = 0;
 let block = false;
 let touch;
 
+let time;
 let matches;
 let fails;
 
@@ -70,6 +71,10 @@ function unflipCard(card) {
 
 function gameOver() {
   viewport.classList.add('pause');
+  const timeSpan = new Date() - time;
+  const min = Math.floor(timeSpan / 60000);
+  const sec = Math.floor((timeSpan - min * 60000) / 1000);
+  document.querySelector('.game-over .time').textContent = `⏳️ ${min}:${sec < 10 ? '0' : ''}${sec}`;
   document.querySelector('.game-over .match span').textContent = matches;
   document.querySelector('.game-over .fails span').textContent = fails;
   document.querySelector('.game-over .ratio span').textContent = Math.round((matches / fails) * 10) / 10;
@@ -186,6 +191,7 @@ function newGame(e) {
   block = false;
   touch = undefined;
 
+  time = new Date();
   matches = 0;
   fails = 0;
 
