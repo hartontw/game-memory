@@ -6,10 +6,20 @@ import './menu';
 const root = document.querySelector(':root');
 const viewport = document.querySelector('.viewport');
 const game = document.querySelector('.game');
+const over = document.querySelector('.game-over');
+
+const borderMargin = 0.25;
+const flipTime = 1000;
 
 let cards = 16;
 let cardSize = 10;
-const borderMargin = 0.25;
+let dynamic = false;
+let pairs = 0;
+let block = false;
+let touch;
+
+let matches;
+let fails;
 
 const gap = () => cardSize * 0.1;
 const wp = () => ({
@@ -17,11 +27,124 @@ const wp = () => ({
   height: viewport.clientHeight,
 });
 
-function touchCard(e) {
-  const { children } = e.target.parentNode;
-  for (let i = 0; i < children.length; i++) {
-    children[i].classList.add('flip');
+function setViewport() {
+  const { width, height } = wp();
+  const cs = height * (cardSize / 100);
+  const cols = Math.floor(width / (cs + cs * borderMargin));
+
+  const size = board.getSize(cards, cols) || { cols: 1, rows: 1 };
+
+  const wu = size.cols * cs + size.cols * cs * borderMargin;
+  const ml = (width - wu) / 2;
+
+  const hu = size.rows * cs + size.rows * cs * borderMargin;
+  const mt = height > hu ? (height - hu) / 2 : height * (gap() / 100);
+
+  root.style.setProperty('--cols', size.cols);
+  root.style.setProperty('--rows', size.rows);
+  root.style.setProperty('--size', `${cardSize}vh`);
+  root.style.setProperty('--gap', `${gap()}vh`);
+  root.style.setProperty('--ml', `${ml}px`);
+  root.style.setProperty('--mt', `${mt}px`);
+}
+
+function flipCard(card) {
+  const back = card.querySelector('.back');
+  back.removeEventListener('click', touchCard);
+  back.classList.add('flip');
+  setTimeout(() => {
+    card.querySelector('.front').classList.add('flip');
+  }, flipTime / 2);
+}
+
+function unflipCard(card) {
+  const back = card.querySelector('.back');
+  card.querySelector('.front').classList.remove('flip');
+  setTimeout(() => {
+    back.classList.remove('flip');
+  }, flipTime / 2);
+  setTimeout(() => {
+    back.addEventListener('click', touchCard);
+  }, flipTime);
+}
+
+function gameOver() {
+  viewport.classList.add('pause');
+  document.querySelector('.game-over .match span').textContent = matches;
+  document.querySelector('.game-over .fails span').textContent = fails;
+  document.querySelector('.game-over .ratio span').textContent = Math.round((matches / fails) * 10) / 10;
+  over.classList.add('open');
+}
+
+function dynamicMatch(card) {
+  setTimeout(() => {
+    card.classList.add('remove');
+    touch.classList.add('remove');
+    setTimeout(() => {
+      card.remove();
+      touch.remove();
+      cards -= 1;
+      if (cards > 0) {
+        setViewport();
+        touch = undefined;
+        block = false;
+      } else gameOver();
+    }, flipTime);
+  }, flipTime);
+}
+
+function staticMatch() {
+  pairs += 1;
+  if (pairs < cards) {
+    block = false;
+    touch = undefined;
+  } else gameOver();
+}
+
+function match(card) {
+  matches += 1;
+  setTimeout(() => {
+    if (dynamic) {
+      dynamicMatch(card);
+    } else {
+      staticMatch();
+    }
+  }, flipTime);
+}
+
+function missmatch(card) {
+  fails += 1;
+  setTimeout(() => {
+    unflipCard(card);
+    unflipCard(touch);
+    setTimeout(() => {
+      block = false;
+      touch = undefined;
+    }, flipTime);
+  }, flipTime * 1.5);
+}
+
+function firstTouch(card) {
+  flipCard(card);
+  touch = card;
+}
+
+function secondTouch(card) {
+  block = true;
+  flipCard(card);
+  if (card.dataset.id === touch.dataset.id) {
+    match(card);
+  } else {
+    missmatch(card);
   }
+}
+
+function touchCard(e) {
+  if (block) return;
+  const card = e.target.parentNode;
+  if (touch) {
+    if (card !== touch) secondTouch(card);
+  } else firstTouch(card);
 }
 
 function createCard(id, backImage, frontImage) {
@@ -33,6 +156,7 @@ function createCard(id, backImage, frontImage) {
   back.classList.add('back');
   back.src = backImage;
   back.alt = 'Card';
+  back.addEventListener('click', touchCard);
 
   const front = document.createElement('img');
   front.classList.add('front');
@@ -42,18 +166,30 @@ function createCard(id, backImage, frontImage) {
   card.appendChild(back);
   card.appendChild(front);
 
-  card.addEventListener('click', touchCard);
-
   return card;
 }
 
 function newGame(e) {
-  const config = e ? e.detail.config : load();
-  cardSize = config.cardSize;
+  while (game.lastChild) {
+    game.removeChild(game.lastChild);
+  }
 
-  const back = `images/backs/${Math.floor(Math.random() * 9)}.jpg`;
+  if (viewport.classList.contains('pause')) viewport.classList.remove('pause');
+  if (over.classList.contains('open')) over.classList.remove('open');
+
+  const config = e ? e.detail.config : load();
 
   cards = Object.keys(config.images).length;
+  cardSize = config.cardSize;
+  dynamic = config.dynamic;
+  pairs = 0;
+  block = false;
+  touch = undefined;
+
+  matches = 0;
+  fails = 0;
+
+  const back = `./images/backs/${Math.floor(Math.random() * 9)}.jpg`;
 
   for (let i = 0; i < 2; i++) {
     const images = {};
@@ -75,28 +211,8 @@ function newGame(e) {
   setViewport();
 }
 
-function setViewport() {
-  const { width, height } = wp();
-  const cs = height * (cardSize / 100);
-  const cols = Math.floor(width / (cs + cs * borderMargin));
-
-  const size = board.getSize(cards, cols);
-
-  const wu = size.cols * cs + size.cols * cs * borderMargin;
-  const ml = (width - wu) / 2;
-
-  const hu = size.rows * cs + size.rows * cs * borderMargin;
-  const mt = height > hu ? (height - hu) / 2 : height * (gap() / 100);
-
-  root.style.setProperty('--cols', size.cols);
-  root.style.setProperty('--rows', size.rows);
-  root.style.setProperty('--size', `${cardSize}vh`);
-  root.style.setProperty('--gap', `${gap()}vh`);
-  root.style.setProperty('--ml', `${ml}px`);
-  root.style.setProperty('--mt', `${mt}px`);
-}
-
 window.addEventListener('resize', setViewport, true);
 document.querySelector('.menu .new-game').addEventListener('confirm', newGame);
+root.style.setProperty('--flip-time', `${flipTime / 1000}s`);
 
 newGame();

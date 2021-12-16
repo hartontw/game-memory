@@ -2,14 +2,14 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Memory Game</title>
   </head>
   <body>
     <div id="app">
       <div class="menu">
-        <img class="button" src="./images/icons/menu-open.svg" alt="Open Menu">
+        <img class="button" src="/images/icons/menu-open.svg" alt="Open Menu">
         <div class="new-game">
           <div class="header">
             <div class="button close-btn"></div>
@@ -37,6 +37,12 @@
           <div class="button accept-btn"></div>
         </div>
         <div class="resizer"></div>
+      </div>
+      <div class="game-over">
+        <p class="title">GAME OVER</p>
+        <p class="match">Pairs: <span>10</span></p>
+        <p class="fails">Fails: <span>10</span></p>
+        <p class="ratio">Ratio: <span>0.5</span></p>
       </div>
     </div>
     <script type="module" src="/js/main.js"></script>

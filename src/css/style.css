@@ -149,7 +149,7 @@
 .menu .new-game .content .cards .file {
   width: var(--size);
   height: var(--size);
-  background: url("images/icons/btn-add.svg");
+  background: url("./images/icons/btn-add.svg");
 }
 
 .menu .new-game .content .cards .file:hover {
@@ -263,13 +263,19 @@
 }
 
 .game .card {
-  background: white;
   position: relative;
+  background: #0000;
+  transition: var(--flip-time);
+}
+
+.game .card.remove {
+  transform: scale(0);
 }
 
 .game .card .back {
   width: 100%;
   height: 100%;
+  border-radius: 1vh;
   position: absolute;
   transform: rotate3d(1, 1, 0, 0deg);
   transition: transform var(--flip-time);
@@ -282,6 +288,7 @@
 .game .card .front {
   width: 100%;
   height: 100%;
+  border-radius: 1vh;
   position: absolute;
   transform: rotate3d(1, 1, 0, 90deg);
   transition: transform var(--flip-time);
@@ -289,4 +296,42 @@
 
 .game .card .front.flip {
   transform: rotate3d(1, 1, 0, 0deg);
+}
+
+.game-over {
+  width: 40vh;
+  height: 50vh;
+  background: #5f8f9f;
+  position: fixed;
+  top: 5vh;
+  margin: 1vh calc(50vw - 20vh);
+  border: 2px solid white;
+  border-radius: 5vh;
+  text-align: center;
+  color: white;
+  font-size: 5vh;
+  visibility: hidden;
+  transform: scale(0);
+  transition: transform 1s;
+}
+
+.game-over.open {
+  transform: scale(1);
+  visibility: visible;
+}
+
+.game-over .title {
+  text-shadow: 1px 1px 2px black;
+}
+
+.game-over .match span {
+  color: #35e131;
+}
+
+.game-over .fails span {
+  color: #ff504d;
+}
+
+.game-over .ratio span {
+  color: #eadb27;
 }

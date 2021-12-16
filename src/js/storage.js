@@ -7,7 +7,7 @@ const storage = sessionStorage;
 export function getDefaultImages() {
   const images = {};
   for (let i = 0; i < 15; i++) {
-    images[i] = `images/default/${i}.jpg`;
+    images[i] = `./images/default/${i}.jpg`;
   }
   return images;
 }

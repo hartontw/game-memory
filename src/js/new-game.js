@@ -190,7 +190,7 @@ function createCardThumbnail(id, image) {
 
   const delbtn = document.createElement('img');
   delbtn.classList.add('delete');
-  delbtn.src = 'images/icons/btn-delete.svg';
+  delbtn.src = './images/icons/btn-delete.svg';
   delbtn.alt = `Delete Image ${id}`;
 
   card.appendChild(thumb);
