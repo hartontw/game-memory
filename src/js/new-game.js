@@ -193,6 +193,9 @@ function createCardThumbnail(id, image) {
   delbtn.src = './images/icons/btn-delete.svg';
   delbtn.alt = `Delete Image ${id}`;
 
+  delbtn.addEventListener('touchstart', (e) => e.preventDefault());
+  delbtn.addEventListener('touchend', (e) => e.preventDefault());
+
   card.appendChild(thumb);
   card.appendChild(delbtn);
 
@@ -218,8 +221,8 @@ function createCardThumbnail(id, image) {
     }, deleteTime);
   };
 
-  card.addEventListener('mousedown', startDeleting);
-  card.addEventListener('mouseup', stopDeleting);
+  card.addEventListener('pointerdown', startDeleting);
+  card.addEventListener('pointerup', stopDeleting);
 
   return card;
 }
